@@ -9,4 +9,14 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!--Overview fragment-->
+    <string name="enter_year_instructions">The most popular movies of:</string>
+    <string name="year_hint">Year</string>
+    <string name="btn_submit">Submit</string>
+
+    <!--Movie Fragment-->
+    <string name="overview"><b>Overview</b></string>
+
+
 </resources>
