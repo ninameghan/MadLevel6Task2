@@ -36,6 +36,10 @@ class OverviewFragment : Fragment() {
     ): View? {
 
         _binding = FragmentOverviewBinding.inflate(inflater, container, false)
+
+        binding.btnSubmit.setOnClickListener {
+            viewModel.getMoviesForYear(binding.etYear.toString().toInt())
+        }
         return binding.root
     }
 
