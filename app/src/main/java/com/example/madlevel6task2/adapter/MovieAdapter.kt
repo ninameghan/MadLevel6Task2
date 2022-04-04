@@ -11,11 +11,17 @@ import com.example.madlevel6task2.R
 import com.example.madlevel6task2.databinding.ItemMovieBinding
 import com.example.madlevel6task2.model.MovieItem
 
-class MovieAdapter(private val movies: List<MovieItem>) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class MovieAdapter(private val movies: List<MovieItem>, private val onClick: (MovieItem) -> Unit) :
+    RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                onClick(movies[adapterPosition])
+            }
+        }
         private val binding = ItemMovieBinding.bind(itemView)
 
         fun bind(movieItem: MovieItem) {
