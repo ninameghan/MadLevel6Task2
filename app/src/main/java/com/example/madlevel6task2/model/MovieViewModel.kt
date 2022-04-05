@@ -15,6 +15,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application){
      * gets updated when the use clicks the submit button.
      */
     val movies = movieRepository.movies
+    var movie: MovieItem? = null
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
 
@@ -29,12 +30,12 @@ class MovieViewModel(application: Application) : AndroidViewModel(application){
      * ViewModel is cleared.
      * Extension method of lifecycle-viewmodel-ktx library
      */
-    fun getMoviesForYear(year: Int) {
+    fun getMoviesForYear(year: String) {
         viewModelScope.launch {
             try {
                 //The movieRepository sets its own livedata property
                 //our own movies property points to this one
-                movieRepository.getMoviesForYear(year)
+                movieRepository.getMoviesForYear(year.toInt())
             } catch (error: MovieRepository.MovieError) {
                 _errorText.value = error.message
                 Log.e("Movie error", error.cause.toString())

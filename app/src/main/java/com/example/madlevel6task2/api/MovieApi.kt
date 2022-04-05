@@ -7,10 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MovieApi {
 
-    //use companion object so method is staticallu accessible to all classes
+    //use companion object so method is statically accessible to all classes
     companion object {
         //Base url of the api
-        private const val baseurl = "https://api.themoviedb.org/3"
+        private const val baseurl = "https://api.themoviedb.org/3/discover/"
 
         /**
          * @return [MovieApiService] The service class of the retrofit client
