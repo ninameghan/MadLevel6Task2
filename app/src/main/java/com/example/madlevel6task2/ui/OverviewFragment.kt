@@ -25,7 +25,7 @@ class OverviewFragment : Fragment() {
     private val movies = arrayListOf<MovieItem>()
     private val viewModel: MovieViewModel by viewModels()
 
-    private lateinit var movieAdapter: MovieAdapter
+    private val movieAdapter = MovieAdapter(movies, ::onMovieClick)
 
     private var _binding: FragmentOverviewBinding? = null
 
@@ -45,8 +45,6 @@ class OverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        movieAdapter = MovieAdapter(movies, ::onMovieClick)
 
         binding.btnSubmit.setOnClickListener {
             val year = binding.etYear.text.toString()
