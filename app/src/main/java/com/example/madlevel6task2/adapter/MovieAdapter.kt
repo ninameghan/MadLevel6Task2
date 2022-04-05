@@ -26,7 +26,7 @@ class MovieAdapter(private val movies: List<MovieItem>, private val onClick: (Mo
 
         fun bind(movieItem: MovieItem) {
             //Glide = image loader library
-            Glide.with(context).load(movieItem.getImageUrl()).into(binding.ivMoviePoster)
+            Glide.with(context).load(movieItem.getPosterImageUrl()).into(binding.ivMoviePoster)
         }
     }
 
