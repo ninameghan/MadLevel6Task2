@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.madlevel6task2.api.MovieApi
 import com.example.madlevel6task2.api.MovieApiService
 import com.example.madlevel6task2.model.MovieItem
+import com.example.madlevel6task2.model.MovieList
 import kotlinx.coroutines.withTimeout
 
 class MovieRepository {
@@ -24,10 +25,10 @@ class MovieRepository {
     suspend fun getMoviesForYear(year: Int) {
         try {
             //timeout the request after 5 seconds
-            val result = withTimeout(5_000) {
+            val result: MovieList = withTimeout(5_000) {
                 movieApiService.getMoviesForYear(year)
             }
-            _movies.value = result
+            _movies.value = result.movies
         } catch (error: Throwable) {
             throw MovieError("Unable to find movies for this year", error)
         }

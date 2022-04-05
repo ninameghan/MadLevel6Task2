@@ -5,10 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.madlevel6task2.R
 import com.example.madlevel6task2.adapter.MovieAdapter
 import com.example.madlevel6task2.databinding.FragmentOverviewBinding
 import com.example.madlevel6task2.model.MovieItem
@@ -36,10 +39,7 @@ class OverviewFragment : Fragment() {
     ): View? {
 
         _binding = FragmentOverviewBinding.inflate(inflater, container, false)
-
-        binding.btnSubmit.setOnClickListener {
-            viewModel.getMoviesForYear(binding.etYear.toString().toInt())
-        }
+        initRv()
         return binding.root
     }
 
@@ -47,8 +47,12 @@ class OverviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         movieAdapter = MovieAdapter(movies, ::onMovieClick)
-        binding.rvMovies.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        binding.rvMovies.adapter = movieAdapter
+
+        binding.btnSubmit.setOnClickListener {
+            val year = binding.etYear.text.toString()
+            viewModel.getMoviesForYear(year)
+        }
+
     }
 
     override fun onDestroyView() {
@@ -56,7 +60,25 @@ class OverviewFragment : Fragment() {
         _binding = null
     }
 
-    private fun onMovieClick(movieItem: MovieItem) {
+    private fun initRv() {
+        binding.rvMovies.layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
+        binding.rvMovies.adapter = movieAdapter
+        observeMovies()
+    }
 
+    private fun onMovieClick(movieItem: MovieItem) {
+        viewModel.movie = movieItem
+        findNavController().navigate(R.id.action_OverviewFragment_to_MovieFragment)
+    }
+
+    private fun observeMovies() {
+        viewModel.movies.observe(viewLifecycleOwner) {
+            movies.clear()
+            movies.addAll(it)
+            movieAdapter.notifyDataSetChanged()
+        }
+        viewModel.errorText.observe(viewLifecycleOwner) {
+            Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+        }
     }
 }
