@@ -9,5 +9,5 @@ interface MovieApiService {
 
     //The GET method needed to retrieve movies
     @GET("movie?api_key=53923694b94fba1187f4e34cd718f503&langiage=en-US&sort_by=popularity.desc&with_original_language=en")
-    suspend fun getMoviesForYear(@Query("year") year: Int): MovieList
+    suspend fun getMoviesForYear(@Query("primary_release_year") year: Int): MovieList
 }

@@ -61,7 +61,7 @@ class OverviewFragment : Fragment() {
     }
 
     private fun initRv() {
-        binding.rvMovies.layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
+        binding.rvMovies.layoutManager = GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
         binding.rvMovies.adapter = movieAdapter
     }
 
