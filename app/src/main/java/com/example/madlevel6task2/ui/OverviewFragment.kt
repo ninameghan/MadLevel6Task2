@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -19,6 +20,7 @@ import com.example.madlevel6task2.adapter.MovieAdapter
 import com.example.madlevel6task2.databinding.FragmentOverviewBinding
 import com.example.madlevel6task2.model.MovieItem
 import com.example.madlevel6task2.model.MovieViewModel
+import java.lang.Math.floor
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -82,9 +84,31 @@ class OverviewFragment : Fragment() {
     }
 
     private fun initRv() {
-        binding.rvMovies.layoutManager =
-            GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
+        val gridLayoutManager = GridLayoutManager(requireContext(), 1, RecyclerView.VERTICAL, false)
+        binding.rvMovies.layoutManager = gridLayoutManager
+        // Add Global Layout Listener to calculate the span count.
+        binding.rvMovies.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.rvMovies.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                gridLayoutManager.spanCount = calculateSpanCount()
+                gridLayoutManager.requestLayout()
+            }
+        })
+//        binding.rvMovies.layoutManager =
+//            GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
         binding.rvMovies.adapter = movieAdapter
+    }
+
+    /**
+     * Calculate the number of spans for the recycler view based on the recycler view width.
+     * @return int number of spans.
+     */
+    private fun calculateSpanCount(): Int {
+        val viewWidth = binding.rvMovies.measuredWidth
+        val cardViewWidth = resources.getDimension(R.dimen.poster_width)
+        val spanCount = kotlin.math.floor((viewWidth / (cardViewWidth)).toDouble()).toInt()
+        return if (spanCount >= 1) spanCount else 1
     }
 
     private fun onMovieClick(movieItem: MovieItem) {
