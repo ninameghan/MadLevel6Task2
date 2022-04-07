@@ -9,20 +9,11 @@ import kotlinx.coroutines.launch
 class MovieViewModel(application: Application) : AndroidViewModel(application){
 
     private val movieRepository = MovieRepository()
-
-    /**
-     * This property points direct to the LiveData in the repository, that value
-     * gets updated when the use clicks the submit button.
-     */
+    val selectedMovie = movieRepository.movie
     val movies = movieRepository.movies
-    var movie: MovieItem? = null
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
 
-    /**
-     * Expose non MutableLiveData via getter
-     * errortext can be observed from the Activity for error showing
-     */
     val errorText: LiveData<String>
     get() = _errorText
 
@@ -30,19 +21,23 @@ class MovieViewModel(application: Application) : AndroidViewModel(application){
      * ViewModel is cleared.
      * Extension method of lifecycle-viewmodel-ktx library
      */
-    fun getMoviesForYear(year: String) {
+    fun getMoviesForYear(year: Int) {
         viewModelScope.launch {
             try {
                 //The movieRepository sets its own livedata property
                 //our own movies property points to this one
-                movieRepository.getMoviesForYear(year.toInt())
+                movieRepository.getMoviesForYear(year)
             } catch (error: MovieRepository.MovieError) {
                 _errorText.value = error.message
                 Log.e("Movie error", error.cause.toString())
             }
-
         }
     }
 
+    fun setMovie(newMovie: MovieItem) {
+        viewModelScope.launch {
+            selectedMovie.value = newMovie
+        }
+    }
 
 }

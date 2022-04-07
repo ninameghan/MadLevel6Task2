@@ -6,15 +6,15 @@ data class MovieItem(
 
     @SerializedName("title")
     val title: String,
-    @SerializedName("releaseDate")
+    @SerializedName("release_date")
     val releaseDate: String,
-    @SerializedName("rating")
+    @SerializedName("vote_average")
     val rating: Double,
     @SerializedName("overview")
     val overview: String,
-    @SerializedName("moviePoster")
+    @SerializedName("poster_path")
     val moviePoster: String,
-    @SerializedName("movieBackdrop")
+    @SerializedName("backdrop_path")
     val movieBackdrop: String
 ) {
     fun getPosterImageUrl() = "https://image.tmdb.org/t/p/w200$moviePoster"

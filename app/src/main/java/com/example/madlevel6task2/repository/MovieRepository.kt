@@ -11,13 +11,8 @@ import kotlinx.coroutines.withTimeout
 class MovieRepository {
 
     private val movieApiService: MovieApiService = MovieApi.createApi()
-    private val _movies: MutableLiveData<List<MovieItem>> = MutableLiveData()
-
-    /**
-     * Expose non MutableLiveData via getter
-     */
-    val movies: LiveData<List<MovieItem>>
-    get() = _movies
+    val movies: MutableLiveData<List<MovieItem>> = MutableLiveData()
+    var movie: MutableLiveData<MovieItem> = MutableLiveData()
 
     /**
      * Suspend fucntion that calls a suspend fucntion from the moviesApi call
@@ -28,11 +23,11 @@ class MovieRepository {
             val result: MovieList = withTimeout(5_000) {
                 movieApiService.getMoviesForYear(year)
             }
-            _movies.value = result.movies
+            movies.value = result.results
         } catch (error: Throwable) {
             throw MovieError("Unable to find movies for this year", error)
         }
     }
 
-    class MovieError(message: String, cause: Throwable): Throwable(message, cause)
+    class MovieError(message: String, cause: Throwable) : Throwable(message, cause)
 }

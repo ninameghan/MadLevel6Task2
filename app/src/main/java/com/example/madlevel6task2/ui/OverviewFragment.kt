@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,7 +24,7 @@ import com.example.madlevel6task2.model.MovieViewModel
 class OverviewFragment : Fragment() {
 
     private val movies = arrayListOf<MovieItem>()
-    private val viewModel: MovieViewModel by viewModels()
+    private val viewModel: MovieViewModel by activityViewModels()
 
     private val movieAdapter = MovieAdapter(movies, ::onMovieClick)
 
@@ -39,18 +40,19 @@ class OverviewFragment : Fragment() {
     ): View? {
 
         _binding = FragmentOverviewBinding.inflate(inflater, container, false)
-        initRv()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRv()
+
         binding.btnSubmit.setOnClickListener {
-            val year = binding.etYear.text.toString()
+            val year = binding.etYear.text.toString().toInt()
             viewModel.getMoviesForYear(year)
         }
-
+        observeMovies()
     }
 
     override fun onDestroyView() {
@@ -61,11 +63,10 @@ class OverviewFragment : Fragment() {
     private fun initRv() {
         binding.rvMovies.layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
         binding.rvMovies.adapter = movieAdapter
-        observeMovies()
     }
 
     private fun onMovieClick(movieItem: MovieItem) {
-        viewModel.movie = movieItem
+        viewModel.setMovie(movieItem)
         findNavController().navigate(R.id.action_OverviewFragment_to_MovieFragment)
     }
 
