@@ -1,6 +1,8 @@
 package com.example.madlevel6task2.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -48,10 +50,29 @@ class OverviewFragment : Fragment() {
 
         initRv()
 
-        binding.btnSubmit.setOnClickListener {
-            val year = binding.etYear.text.toString().toInt()
-            viewModel.getMoviesForYear(year)
-        }
+        binding.btnSubmit.isEnabled = false
+
+        binding.etYear.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.toString().length < 4) {
+                    binding.btnSubmit.isEnabled = false
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                if (p0.toString().length == 4) {
+                    binding.btnSubmit.isEnabled = true
+                    binding.btnSubmit.setOnClickListener {
+                        val year = binding.etYear.text.toString().toInt()
+                        viewModel.getMoviesForYear(year)
+                    }
+                }
+            }
+        })
+
         observeMovies()
     }
 
@@ -61,7 +82,8 @@ class OverviewFragment : Fragment() {
     }
 
     private fun initRv() {
-        binding.rvMovies.layoutManager = GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
+        binding.rvMovies.layoutManager =
+            GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
         binding.rvMovies.adapter = movieAdapter
     }
 
